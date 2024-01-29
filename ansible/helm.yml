@@ -1,0 +1,36 @@
+---
+- name: Prepare for Helm and Kuber resources install
+  hosts: node1
+  become: true
+  become_user: root
+
+  tasks:
+    - name: Install Helm
+      become_user: "{{node1_user}}"
+      block:
+        - name: Get Helm command line tool
+          ansible.builtin.uri:
+            url: https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+            return_content: true
+            creates: /usr/local/bin/helm
+          register: helm_installer
+
+        - name: Install Helm binary
+          ansible.builtin.command:
+            cmd: bash
+            stdin: "{{ helm_installer.content }}"
+            creates: /usr/local/bin/helm
+          environment:
+            DESIRED_VERSION: "{{ helm_version | default('') }}"
+          when: helm_installer.content is defined
+
+    - name: Wait for Kubernetes port open
+      become_user: "{{node1_user}}"
+      ansible.builtin.wait_for:
+        port: 6443
+
+    - name: Install Helm diff plugin
+      become_user: "{{node1_user}}"
+      kubernetes.core.helm_plugin:
+        plugin_path: https://github.com/databus23/helm-diff
+        state: present

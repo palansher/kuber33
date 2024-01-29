@@ -1,0 +1,32 @@
+---
+# .ansible-lint
+
+# Ansible-lint completely ignores rules or tags listed below
+# skip_list:
+#   - skip_this_tag
+
+skip_list:
+  - fqcn[action-core]
+  - name[template] # Jinja templates should only be at the end of ‘name’.
+  - name[play] #All plays should be named.
+  - var-naming # var-naming File defines variable that violates variable naming standards
+  - var-spacing # Jinja2 variables and filters should have spaces before and after.
+  - jinja[spacing]
+  - no-free-form
+  - name[missing]
+  - name[casing]
+  - role-name[path]
+  - yaml[line-length] # Line too long (240 > 160 characters)ansible-lint
+  - risky-file-permissions
+  - yaml[comments]
+  - no-relative-paths
+  - fqcn[action-core]
+  - risky-shell-pipe
+  - command-instead-of-shell
+  - no-changed-when
+  - command-instead-of-module
+  - no-handler
+  - run-once[task]
+  - ignore-errors
+  - package-latest
+  - partial-become[task]

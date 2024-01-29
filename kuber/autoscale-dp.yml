@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: autoscale-dp
+  labels:
+    app: autoscale-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: autoscale-app
+  template:
+    metadata:
+      labels:
+        app: autoscale-app
+    spec:
+      containers:
+      - image: luxas/autoscale-demo:v0.1.2
+        name: metrics-provider
+        ports:
+        - name: http8080
+          containerPort: 8080

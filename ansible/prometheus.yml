@@ -1,0 +1,38 @@
+---
+- name: Install prometheus
+  hosts: node1
+  become: true
+  become_user: "{{node1_user}}"
+
+  tasks:
+    - name: Deploy kube-prometheus-stack Helm chart from local path
+      kubernetes.core.helm:
+        name: kube-prometheus-stack
+        chart_ref: ~/kuberdeploy/charts/kube-prometheus-stack
+        values_files:
+          - "/home/{{node1_user}}/kuberdeploy/charts/values.prometheus.dev.yaml"
+        # set_values:
+        #     - value: alertmanagerDnsName="{{alertmanagerDnsName}}"
+        #       value_type: string
+        #     - value: grafanaDnsName="{{grafanaDnsName}}"
+        #       value_type: string
+        #     - value: prometheusDnsName="{{prometheusDnsName}}"
+        #       value_type: string
+        values:
+        alertmanager:
+          ingress:
+          hosts:
+            - "{{alertmanagerDnsName}}"
+        grafana:
+          ingress:
+          hosts:
+            - "{{grafanaDnsName}}"
+        prometheus:
+          ingress:
+          hosts:
+            - "{{prometheusDnsName}}"
+
+        release_namespace: monitoring
+        create_namespace: true
+        wait: true
+        atomic: true

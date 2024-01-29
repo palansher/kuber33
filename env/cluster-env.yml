@@ -1,0 +1,5 @@
+alertmanagerDnsName: alertmanager.de495.task33.rbr-kubernetes.com
+grafanaDnsName: grafana.de495.task33.rbr-kubernetes.com
+prometheusDnsName: prometheus.de495.task33.rbr-kubernetes.com
+appDnsName: app.de495.task33.rbr-kubernetes.com
+

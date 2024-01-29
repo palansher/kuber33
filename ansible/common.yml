@@ -1,0 +1,27 @@
+---
+- name: Install utilites
+  hosts: node1
+  become: true
+
+  tasks:
+    - name: Copy kube rebrain config file locally
+      become_user: "{{node1_user}}"
+      ansible.builtin.fetch:
+        src: ~/.kube/config
+        dest: ~/.kube/config_rebrain
+        flat: true
+
+    - name: Set permissions for kube rebrain config file
+      delegate_to: localhost
+      become_user: vladp
+      ansible.builtin.file:
+        path: ~/.kube/config_rebrain
+        state: file
+        mode: g-rwx,o-rwx
+
+    - name: Install some utilites
+      become: true
+      ansible.builtin.apt:
+        state: present
+        name:
+          - jq

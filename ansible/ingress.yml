@@ -1,0 +1,57 @@
+---
+- name: Install Kuber Cert Manager and ingress-nginx
+  hosts: node1
+  become: true
+  become_user: root
+
+  vars:
+    cert_manager_version: 1.13.3
+
+  tasks:
+    - name: Add cert-manager chart repo
+      become_user: "{{node1_user}}"
+      kubernetes.core.helm_repository:
+        name: jetstack
+        repo_url: "https://charts.jetstack.io"
+
+    - name: Deploy cert-manager controller CRDs
+      become_user: "{{node1_user}}"
+      ansible.builtin.shell: |
+        kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v{{cert_manager_version}}/cert-manager.crds.yaml
+
+    - name: Deploy cert-manager controller Helm chart from uri
+      become_user: "{{node1_user}}"
+      kubernetes.core.helm:
+        name: cert-manager
+        update_repo_cache: true
+        chart_ref: jetstack/cert-manager
+        release_namespace: cert-manager
+        create_namespace: true
+        atomic: true
+        wait: true
+        chart_version: "{{cert_manager_version}}"
+
+      register: cert_manager_result
+
+    # - name: Show cert-manager helm command
+    #   ansible.builtin.debug:
+    #       var: cert_manager_result
+    - name: Add ingress-nginx chart repo
+      become_user: "{{node1_user}}"
+      kubernetes.core.helm_repository:
+        name: ingress-nginx
+        repo_url: "https://kubernetes.github.io/ingress-nginx"
+      # values:
+      #   installCRDs: true
+
+    - name: Deploy ingress-nginx Helm chart from uri
+      become_user: "{{node1_user}}"
+      kubernetes.core.helm:
+        name: ingress-nginx
+        update_repo_cache: true
+        chart_ref: ingress-nginx/ingress-nginx
+        release_namespace: ingress-nginx
+        # release_namespace: monitoring
+        create_namespace: true
+        atomic: true
+        wait: true

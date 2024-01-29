@@ -1,0 +1,12 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: autoscale-monitor
+  labels:
+    release: kube-prometheus-stack # указать первоначально, иначе podmonitor не сработает. Было: prometheus-stack
+spec:
+  selector:
+    matchLabels:
+      app: autoscale-app # какие контейнеры мониторим
+  podMetricsEndpoints:
+  - port: http8080 # с какого порта собирать метрики

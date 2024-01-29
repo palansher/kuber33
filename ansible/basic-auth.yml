@@ -1,0 +1,12 @@
+- name: Prepare Basic auth files
+  hosts: localhost
+  # become: true
+  # become_user: vladp
+
+  tasks:
+    - name: Create Basic Auth file on localhost
+      run_once: true
+      community.general.htpasswd:
+        path: ../auth/auth
+        name: admin
+        password: "adminpassword"
