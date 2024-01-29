@@ -28,8 +28,25 @@ for i in {1..150}; do
 
 done
 
-echo -e "\ngetting http_requests_total metric:"
-kubectl get --raw /apis/custom.metrics.k8s.io/v1beta1/namespaces/default/pods/*/http_requests | jq .
+for i in {1..150}; do
+
+  if [[ $i -eq 150 ]]; then
+    echo -e "\nhttp_requests metrica is not available!"
+    exit 1
+  fi
+
+  echo -n "Checking http_requests metrica available.. $i"
+  tput hpa 0 # move the cursor to the left-most column
+
+  if kubectl get --raw /apis/custom.metrics.k8s.io/v1beta1/namespaces/default/pods/*/http_requests >/dev/null; then
+    echo -e "\n\nhttp_requests metrica available is available:\n"
+    kubectl get --raw /apis/custom.metrics.k8s.io/v1beta1/namespaces/default/pods/*/http_requests | jq .
+    break
+  fi
+  sleep 2
+
+done
+
 # kubectl get --raw /apis/custom.metrics.k8s.io/v1beta1 | jq | grep -i http_requests
 
 # kubectl get --raw /apis/custom.metrics.k8s.io/v1beta1 | jq
@@ -37,5 +54,3 @@ kubectl get --raw /apis/custom.metrics.k8s.io/v1beta1/namespaces/default/pods/*/
 #kubectl rollout restart deployment prometheus-adapter -n monitoring
 
 # kubectl get pods --field-selector=status.phase!=Running
-
-

@@ -13,7 +13,7 @@ export KUBECONFIG=/home/vladp/.kube/config_rebrain
 export
 
 init: delete-dns-env set-hostsenv set-common set-helm set-metrics-server \
-	set-ingress-controller set-demo-app set-hpa set-prometheus set-prometheus-adapter check-dns
+	set-ingress-controller set-hpa set-prometheus set-demo-app set-prometheus-adapter check-dns
 
 set-hostsenv: parse-logins convert-env
 
@@ -45,7 +45,7 @@ set-hpa:
 set-prometheus:
 	@bash kuber/set-prometheus.sh
 
-set-demo-app:	
+set-demo-app:
 	@bash kuber/set-demo-app.sh
 	
 	

@@ -95,7 +95,7 @@ https://i.imgur.com/reRvKk9.png
 
 ## 2
 
-В задании 6. указана метрика для мониторинга с именем http_requests. 
+В задании пункт 6 указана метрика для мониторинга с именем http_requests. 
 
 И вроде все в порядке:
 
@@ -124,7 +124,11 @@ https://i.imgur.com/reRvKk9.png
 
 Однако, само приложение отдает единственную метрику с другми именем: http_requests_total
 
+```
 curl 178.128.137.4/metrics
 # HELP http_requests_total The amount of requests served by the server in total
 # TYPE http_requests_total counter
 http_requests_total 22
+```
+
+Это та же метрика с другим именем ?
